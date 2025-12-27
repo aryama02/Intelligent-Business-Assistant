@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-
-
-
+pydantic
+ollama
+motor
+pyjwt
 
