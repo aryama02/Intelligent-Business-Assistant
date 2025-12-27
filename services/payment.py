@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 async def subscribe_user_service(email: str):
     # payment processing logic would go here (e.g., interacting with a payment gateway)
+    
     db_instance = get_database()
     users_collection = db_instance.get_collection("users")
     user_subscription = db_instance.get_collection("subscriptions")
@@ -20,7 +21,7 @@ async def subscribe_user_service(email: str):
             )
             return {"message": "User subscription renewed successfully"}
     
-        
+
 
     result = await users_collection.update_one(
         {"email": email}, {"$set": {"isSubscribed": True}}
