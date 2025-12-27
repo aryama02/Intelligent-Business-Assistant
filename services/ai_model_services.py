@@ -39,7 +39,7 @@ async def chat_endpoint_service(request: chatRequest):
     knowledge_about_company = format_company_info(shaped_company_info)
 
     response = ollama.chat(
-        model="gemma3:1b",
+        model="deepseek-r1:8b",
         messages=[
             {
                 "role": "system",
