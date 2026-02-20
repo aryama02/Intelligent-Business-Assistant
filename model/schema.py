@@ -20,3 +20,21 @@ class userLoginRequest(BaseModel):
 class chatModel(BaseModel):
     question: str
     answer: str
+
+
+# Customer/Store data model
+class CustomerInfoRequest(BaseModel):
+    name: str
+    id: str  # Store ID like "1234" or "12345"
+    description: str  # Description of the store/customer for embeddings
+
+
+# Search request model
+class SearchRequest(BaseModel):
+    query: str
+
+
+class Chatdata(BaseModel):
+    company_name: str
+    question: str   
+    answer: str 

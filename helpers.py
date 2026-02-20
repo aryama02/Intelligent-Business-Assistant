@@ -13,8 +13,7 @@ def get_knowledge_base_string(knowledge_data):
 
     # Add instruction to handle multi-part questions
     context_str += (
-        "\nIMPORTANT: If the user's message asks about multiple topics (e.g. both best product AND return policy), "
-        "you MUST combine the details for ALL requested topics into your answer."
+        "\nIMPORTANT: If the user's message asks about multiple topics (e.g. both best product AND return policy),\nIf User ask one question then reply only one answer , \n Do not make up answers.\nyou MUST combine the details for ALL requested topics into your answer.\nIf the information is not available, respond with 'I don't have that information.'"
     )
     return context_str
 
