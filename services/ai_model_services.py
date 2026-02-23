@@ -1,4 +1,4 @@
-from db import get_database, get_redis
+from db import get_database, get_redis, get_kb_version
 from helpers import format_company_info, get_knowledge_base_string
 from model.schema import chatRequest
 from services.search_services import search_customer_service
@@ -13,19 +13,6 @@ async def chat_endpoint_service(request: chatRequest, api: str):
 
     if not len(api) == 20 or not api.startswith("Ar"):
         return {"error": "Invalid API key"}
-
-    # 1. Check Redis Cache
-    redis_client = get_redis()
-    cache_key = f"chat:{api}:{hashlib.md5(request.message.encode()).hexdigest()}"
-    
-    if redis_client:
-        try:
-            cached_response = await redis_client.get(cache_key)
-            if cached_response:
-                print(f"Cache Hit for {cache_key}")
-                return json.loads(cached_response)
-        except Exception as e:
-            print(f"Redis Error (get): {e}")
 
     subscription_collection = get_database().get_collection("subscriptions")
     users_collection = get_database().get_collection("users")
@@ -56,13 +43,29 @@ async def chat_endpoint_service(request: chatRequest, api: str):
             "founded": company_info["founded"],
             "location": company_info["location"],
         }
+    company_name = company_info.get("company_name") if company_info else ""
+
+    # 1. Check Redis Cache (versioned by knowledge base)
+    redis_client = get_redis()
+    kbv = await get_kb_version(company_name) if company_name else "0"
+    message_hash = hashlib.md5(request.message.encode()).hexdigest()
+    cache_key = f"chat:{api}:{company_name}:{kbv}:{message_hash}"
+
+    if redis_client:
+        try:
+            cached_response = await redis_client.get(cache_key)
+            if cached_response:
+                print(f"Cache Hit for {cache_key}")
+                return json.loads(cached_response)
+        except Exception as e:
+            print(f"Redis Error (get): {e}")
 
     # chat config
     chat_config_cursor = chat_config_collection.find(
-        {"company_name": company_info.get("company_name", "")}
+        {"company_name": company_name}
     )
     chat_config = await chat_config_cursor.to_list(length=100)
-    print(f"[QUERY] Chat Config Query: {company_info.get('company_name', '')} -> Found {len(chat_config)} items")
+    print(f"[QUERY] Chat Config Query: {company_name} -> Found {len(chat_config)} items")
 
     shaped_chat_config = []
     if chat_config:
@@ -121,22 +124,6 @@ async def chat_smart_endpoint_service(request: chatRequest, api: str):
     if not len(api) == 20 or not api.startswith("Ar"):
         return {"error": "Invalid API key"}
 
-    # 1. Check Redis Cache
-    redis_client = get_redis()
-    message_hash = hashlib.md5(request.message.encode()).hexdigest()
-    cache_key = f"chat_smart:{api}:{message_hash}"
-    
-    if redis_client:
-        try:
-            cached_response = await redis_client.get(cache_key)
-            if cached_response:
-                print(f"Cache Hit for {cache_key}")
-                return json.loads(cached_response)
-        except Exception as e:
-            print(f"Redis Error (get): {e}")
-
-    print(f"Cache Miss for {cache_key}")
-
     subscription_collection = get_database().get_collection("subscriptions")
     users_collection = get_database().get_collection("users")
     chat_config_collection = get_database().get_collection("chat_configs")
@@ -169,6 +156,23 @@ async def chat_smart_endpoint_service(request: chatRequest, api: str):
     company_name = company_info.get("company_name") if company_info else None
     if not company_name:
         return {"error": "Company information not found for this API key."}
+
+    # 1. Check Redis Cache (versioned by knowledge base)
+    redis_client = get_redis()
+    kbv = await get_kb_version(company_name)
+    message_hash = hashlib.md5(request.message.encode()).hexdigest()
+    cache_key = f"chat_smart:{api}:{company_name}:{kbv}:{message_hash}"
+    
+    if redis_client:
+        try:
+            cached_response = await redis_client.get(cache_key)
+            if cached_response:
+                print(f"Cache Hit for {cache_key}")
+                return json.loads(cached_response)
+        except Exception as e:
+            print(f"Redis Error (get): {e}")
+
+    print(f"Cache Miss for {cache_key}")
 
     chat_config = await chat_config_collection.find(
         {"company_name": company_name}

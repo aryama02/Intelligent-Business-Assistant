@@ -22,6 +22,11 @@ class chatModel(BaseModel):
     answer: str
 
 
+class CompanyKnowledgeIngestRequest(BaseModel):
+    text: str
+    max_pairs: int = 18
+
+
 # Customer/Store data model
 class CustomerInfoRequest(BaseModel):
     name: str

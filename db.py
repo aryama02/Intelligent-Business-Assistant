@@ -66,6 +66,33 @@ def get_redis():
 async def clear_old_cache(cache_key):
     await db.redis_client.delete(cache_key)
 
+async def get_kb_version(company_name: str) -> str:
+    """
+    A lightweight version string used to invalidate chat response caches whenever
+    the company's knowledge base (chat configs) changes.
+    """
+    if not db.redis_client:
+        return "0"
+    key = f"kbv:{company_name}"
+    try:
+        v = await db.redis_client.get(key)
+        return v if v else "0"
+    except Exception:
+        return "0"
+
+async def bump_kb_version(company_name: str) -> str:
+    """
+    Increment the knowledge-base version in Redis (creates it if missing).
+    """
+    if not db.redis_client:
+        return "0"
+    key = f"kbv:{company_name}"
+    try:
+        v = await db.redis_client.incr(key)
+        return str(v)
+    except Exception:
+        return "0"
+
 
 async def flush_redis():
     await db.redis_client.flushdb()

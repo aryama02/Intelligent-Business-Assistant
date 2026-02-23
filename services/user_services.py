@@ -1,4 +1,4 @@
-from db import get_database, get_redis, clear_old_cache, flush_redis
+from db import get_database, get_redis, clear_old_cache, bump_kb_version, flush_redis
 from model.schema import userRegistrationRequest, chatModel
 from zilliz_db import insert_customer_embedding, update_customer_embedding
 from services.embedding_services import generate_embedding
@@ -49,6 +49,7 @@ async def chat_config_service(chat_data: chatModel, decoded_payload: dict):
     if redis_client:
         cache_key = f"chat_configs:{company_name}"
         await clear_old_cache(cache_key)
+        await bump_kb_version(company_name)
     
     return {
         "message": "Chat configuration saved successfully",
@@ -88,6 +89,7 @@ async def update_chat_config_service(config_id: str, chat_data: chatModel, decod
     if redis_client:
         cache_key = f"chat_configs:{company_name}"
         await clear_old_cache(cache_key)
+        await bump_kb_version(company_name)
     
     return {
         "message": "Chat configuration updated successfully",

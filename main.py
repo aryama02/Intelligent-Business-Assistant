@@ -8,6 +8,7 @@ from model.schema import (
     userRegistrationRequest,
     CustomerInfoRequest,
     SearchRequest,
+    CompanyKnowledgeIngestRequest,
 )
 from services.user_services import (
     getProfileService,
@@ -16,6 +17,7 @@ from services.user_services import (
     get_chat_config_service,
     update_chat_config_service,
 )
+from services.knowledge_ingest_services import ingest_company_knowledge_service
 from services.customer_services import store_customer_service, get_customer_by_id_service
 from services.search_services import search_customer_service
 from contextlib import asynccontextmanager
@@ -104,6 +106,18 @@ async def update_chat_config_endpoint(
     config_id: str, chat_data: chatModel, decoded_payload: dict = Depends(lambda: None)
 ):
     return await update_chat_config_service(config_id, chat_data, decoded_payload)
+
+
+@app.post("/ingest-company-knowledge")
+@verify_token()
+async def ingest_company_knowledge_endpoint(
+    payload: CompanyKnowledgeIngestRequest, decoded_payload: dict = Depends(lambda: None)
+):
+    return await ingest_company_knowledge_service(
+        company_name=decoded_payload["company_name"],
+        text=payload.text,
+        max_pairs=payload.max_pairs,
+    )
 # Customer Management Endpoints
 
 @app.post("/customers")
