@@ -62,3 +62,11 @@ def get_database():
 
 def get_redis():
     return db.redis_client
+
+async def clear_old_cache(cache_key):
+    await db.redis_client.delete(cache_key)
+
+
+async def flush_redis():
+    await db.redis_client.flushdb()
+    print("Flushed Redis")

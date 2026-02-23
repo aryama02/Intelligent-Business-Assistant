@@ -123,7 +123,8 @@ async def chat_smart_endpoint_service(request: chatRequest, api: str):
 
     # 1. Check Redis Cache
     redis_client = get_redis()
-    cache_key = f"chat_smart:{api}:{hashlib.md5(request.message.encode()).hexdigest()}"
+    message_hash = hashlib.md5(request.message.encode()).hexdigest()
+    cache_key = f"chat_smart:{api}:{message_hash}"
     
     if redis_client:
         try:
@@ -165,8 +166,12 @@ async def chat_smart_endpoint_service(request: chatRequest, api: str):
         }
 
     # Chat config (knowledge base)
+    company_name = company_info.get("company_name") if company_info else None
+    if not company_name:
+        return {"error": "Company information not found for this API key."}
+
     chat_config = await chat_config_collection.find(
-        {"company_name": company_info["company_name"]}
+        {"company_name": company_name}
     ).to_list(length=100)
 
     shaped_chat_config = []

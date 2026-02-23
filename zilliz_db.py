@@ -133,6 +133,20 @@ def search_similar_customers(query_embedding: list, top_k: int = 5):
         print(f"Error searching customers: {e}")
         raise
 
+def update_customer_embedding(mongodb_id: str, customer_name: str, customer_data: str, embedding: list):
+    """
+    Update customer embedding in Zilliz by deleting existing one and inserting new one
+    """
+    try:
+        # Delete existing embedding
+        delete_customer_embedding(mongodb_id)
+        
+        # Insert new embedding
+        return insert_customer_embedding(mongodb_id, customer_name, customer_data, embedding)
+    except Exception as e:
+        print(f"Error updating customer embedding: {e}")
+        raise
+
 def delete_customer_embedding(mongodb_id: str):
     """Delete customer embedding by MongoDB ID"""
     try:

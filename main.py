@@ -14,6 +14,7 @@ from services.user_services import (
     register_user_service,
     chat_config_service,
     get_chat_config_service,
+    update_chat_config_service,
 )
 from services.customer_services import store_customer_service, get_customer_by_id_service
 from services.search_services import search_customer_service
@@ -97,7 +98,12 @@ async def chat_config_endpoint(
 ):
     return await chat_config_service(chat_data, decoded_payload)
 
-
+@app.put("/update-chat-config/{config_id}")
+@verify_token()
+async def update_chat_config_endpoint(
+    config_id: str, chat_data: chatModel, decoded_payload: dict = Depends(lambda: None)
+):
+    return await update_chat_config_service(config_id, chat_data, decoded_payload)
 # Customer Management Endpoints
 
 @app.post("/customers")
@@ -155,4 +161,4 @@ async def chat_smart_endpoint(request: chatRequest, api: str = Query(..., descri
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
