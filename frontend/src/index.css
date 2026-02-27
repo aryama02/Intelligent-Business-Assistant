@@ -8,17 +8,6 @@
     color-scheme: light;
   }
 
-  html,
-  body,
-  #root {
-    height: 100%;
-  }
-
-  body {
-    margin: 0;
-    @apply bg-slate-50 text-slate-900 antialiased;
-  }
-
   ::selection {
     @apply bg-slate-900 text-white;
   }

@@ -1,6 +1,6 @@
 import { getToken } from './storage'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api'
 
 export class ApiError extends Error {
   status?: number

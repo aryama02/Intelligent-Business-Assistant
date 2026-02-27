@@ -1,4 +1,7 @@
-import { NavLink } from 'react-router-dom'
+"use client";
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import { LayoutDashboard, Shield, Database, MessageSquareText, Wand2 } from 'lucide-react'
 
@@ -10,26 +13,28 @@ const links = [
 ]
 
 export function SidebarNav() {
+  const pathname = usePathname();
+
   return (
     <nav className="space-y-1">
-      {links.map((l) => (
-        <NavLink
-          key={l.to}
-          to={l.to}
-          className={({ isActive }) =>
-            clsx(
+      {links.map((l) => {
+        const isActive = l.to === '/' ? pathname === '/' : pathname?.startsWith(l.to);
+        return (
+          <Link
+            key={l.to}
+            href={l.to}
+            className={clsx(
               'flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition',
               isActive
                 ? 'bg-slate-900 text-white'
                 : 'text-slate-700 hover:bg-slate-100',
-            )
-          }
-          end={l.to === '/'}
-        >
-          <l.icon className="h-4 w-4" />
-          {l.label}
-        </NavLink>
-      ))}
+            )}
+          >
+            <l.icon className="h-4 w-4" />
+            {l.label}
+          </Link>
+        );
+      })}
 
       <div className="pt-4">
         <div className="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
