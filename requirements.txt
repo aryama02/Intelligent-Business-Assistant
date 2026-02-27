@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic
+ollama
+motor
+pyjwt
+pymilvus
+sentence-transformers
+redis
+hiredis
+
+
