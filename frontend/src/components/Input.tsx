@@ -11,12 +11,12 @@ export function Input(
   return (
     <label className="block">
       {label ? (
-        <div className="mb-1 text-xs font-medium text-slate-700">{label}</div>
+        <div className="mb-1 text-xs font-medium text-slate-400">{label}</div>
       ) : null}
       <input
         id={inputId}
         className={clsx(
-          'h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-900/5',
+          'h-10 w-full rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10',
           className,
         )}
         {...rest}
@@ -25,4 +25,3 @@ export function Input(
     </label>
   )
 }
-

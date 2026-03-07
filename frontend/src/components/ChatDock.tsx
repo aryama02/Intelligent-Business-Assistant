@@ -27,7 +27,7 @@ export function ChatDock() {
     {
       role: 'assistant',
       content:
-        'Hey! Im RAMO, your AI assistant. Add an API key, then ask me anything. Try Smart mode for vector-search powered answers.',
+        'Hey! Im Obsidez, your AI assistant. Add an API key, then ask me anything. Try Smart mode for vector-search powered answers.',
     },
   ])
 
@@ -95,14 +95,14 @@ export function ChatDock() {
 
       <aside
         className={clsx(
-          'fixed right-0 top-0 z-50 h-full w-[420px] border-l border-slate-200 bg-white shadow-soft md:block',
+          'fixed right-0 top-0 z-50 h-full w-[420px] border-l border-white/10 bg-[#0f172a]/90 backdrop-blur-xl shadow-soft md:block',
           'max-md:w-full',
           openMobile ? 'max-md:translate-x-0' : 'max-md:translate-x-full',
           'transition-transform duration-200',
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 px-4 py-3 text-white">
+          <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 px-4 py-3 text-white">
             <div className="flex items-center gap-3">
               <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-white/10">
                 <div className="flex h-7 w-7 items-center justify-center rounded-2xl bg-white text-slate-900 shadow-soft">
@@ -110,7 +110,7 @@ export function ChatDock() {
                 </div>
               </div>
               <div>
-                <div style={{ fontFamily: "'Orbitron', sans-serif" }} className="text-sm font-bold tracking-wider">RAMO</div>
+                <div style={{ fontFamily: "'Orbitron', sans-serif" }} className="text-sm font-bold tracking-wider">Obsidez</div>
                 <div className="text-xs text-slate-200">Your AI-powered assistant</div>
               </div>
             </div>
@@ -126,7 +126,7 @@ export function ChatDock() {
             </div>
           </div>
 
-          <div className="border-b border-slate-200 px-4 py-3">
+          <div className="border-b border-white/10 px-4 py-3">
             <Input
               label="API key"
               value={apiKey}
@@ -142,7 +142,7 @@ export function ChatDock() {
                 <Bubble key={idx} message={m} />
               ))}
               {loading ? (
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
                   Thinking…
                 </div>
               ) : null}
@@ -150,9 +150,9 @@ export function ChatDock() {
             </div>
           </div>
 
-          <div className="border-t border-slate-200 px-4 py-3">
+          <div className="border-t border-white/10 px-4 py-3">
             {error ? (
-              <div className="mb-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+              <div className="mb-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-300">
                 {error}
               </div>
             ) : null}
@@ -189,12 +189,12 @@ export function ChatDock() {
 function ModeSwitch(props: { mode: Mode; setMode: (m: Mode) => void }) {
   const { mode, setMode } = props
   return (
-    <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 p-1">
+    <div className="flex items-center rounded-2xl border border-white/10 bg-white/5 p-1">
       <button
         onClick={() => setMode('standard')}
         className={clsx(
           'flex items-center gap-1 rounded-xl px-2 py-1 text-xs font-medium transition',
-          mode === 'standard' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900',
+          mode === 'standard' ? 'bg-white/10 text-slate-100 shadow-sm' : 'text-slate-400 hover:text-slate-100',
         )}
       >
         <Bot className="h-3.5 w-3.5" />
@@ -204,7 +204,7 @@ function ModeSwitch(props: { mode: Mode; setMode: (m: Mode) => void }) {
         onClick={() => setMode('smart')}
         className={clsx(
           'flex items-center gap-1 rounded-xl px-2 py-1 text-xs font-medium transition',
-          mode === 'smart' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900',
+          mode === 'smart' ? 'bg-white/10 text-slate-100 shadow-sm' : 'text-slate-400 hover:text-slate-100',
         )}
       >
         <Sparkles className="h-3.5 w-3.5" />
@@ -222,7 +222,7 @@ function Bubble(props: { message: Message }) {
       <div
         className={clsx(
           'max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed',
-          isUser ? 'bg-slate-900 text-white' : 'border border-slate-200 bg-white text-slate-900',
+          isUser ? 'bg-slate-900 text-white' : 'border border-white/10 bg-white/5 text-slate-200',
         )}
       >
         <div className="whitespace-pre-wrap">{message.content}</div>

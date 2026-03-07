@@ -13,13 +13,13 @@ export function Button(
   return (
     <button
       className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/20 disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-60',
         size === 'sm' ? 'h-9 px-3 text-sm' : 'h-10 px-4 text-sm',
         variant === 'primary' &&
-          'bg-slate-900 text-white hover:bg-slate-800',
+        'bg-indigo-600 text-white hover:bg-indigo-500',
         variant === 'secondary' &&
-          'bg-slate-100 text-slate-900 hover:bg-slate-200',
-        variant === 'ghost' && 'bg-transparent text-slate-700 hover:bg-slate-100',
+        'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10',
+        variant === 'ghost' && 'bg-transparent text-slate-400 hover:bg-white/5 hover:text-slate-200',
         variant === 'danger' && 'bg-rose-600 text-white hover:bg-rose-500',
         className,
       )}
@@ -27,4 +27,3 @@ export function Button(
     />
   )
 }
-

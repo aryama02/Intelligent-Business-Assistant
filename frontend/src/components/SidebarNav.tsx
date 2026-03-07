@@ -2,50 +2,105 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { clsx } from 'clsx'
-import { LayoutDashboard, Shield, Database, MessageSquareText, Wand2 } from 'lucide-react'
+import { LayoutDashboard, Database, MessageSquareText, Wand2 } from 'lucide-react'
+import { useAppContext } from '../context/AppContext'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/chat-configs', label: 'Chat Configs', icon: Database },
   { to: '/knowledge-import', label: 'AI Import', icon: Wand2 },
-  { to: '/auth', label: 'Auth', icon: Shield },
 ]
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const { user, logoutUser } = useAppContext()
+
+  const initials = user?.email ? user.email.slice(0, 2).toUpperCase() : '??'
 
   return (
-    <nav className="space-y-1">
+    <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      {user && (
+        <div
+          style={{
+            padding: '0 12px 10px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          <button
+            type="button"
+            className="profile-avatar-btn"
+            onClick={logoutUser}
+            title="Log out"
+          >
+            {initials}
+          </button>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: '#e2e8f0',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {user.email}
+            </div>
+            <div
+              style={{
+                fontSize: 11,
+                color: 'rgba(148,163,184,0.6)',
+              }}
+            >
+              Click avatar to log out
+            </div>
+          </div>
+        </div>
+      )}
       {links.map((l) => {
         const isActive = l.to === '/' ? pathname === '/' : pathname?.startsWith(l.to);
         return (
           <Link
             key={l.to}
             href={l.to}
-            className={clsx(
-              'flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition',
-              isActive
-                ? 'bg-slate-900 text-white'
-                : 'text-slate-700 hover:bg-slate-100',
-            )}
+            className={`dark-sidebar-link ${isActive ? 'active' : ''}`}
           >
-            <l.icon className="h-4 w-4" />
+            <l.icon style={{ width: 16, height: 16 }} />
             {l.label}
           </Link>
         );
       })}
 
-      <div className="pt-4">
-        <div className="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-          <MessageSquareText className="h-4 w-4" />
-          RAMO Chat
+      <div style={{ paddingTop: 20 }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '0 12px',
+          fontSize: 11,
+          fontWeight: 600,
+          textTransform: 'uppercase' as const,
+          letterSpacing: '0.08em',
+          color: 'rgba(148,163,184,0.35)',
+          marginBottom: 8,
+        }}>
+          <MessageSquareText style={{ width: 16, height: 16 }} />
+          Obsidez Chat
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-600">
-          Use the panel on the right to chat with RAMO using your API key.
+        <div style={{
+          borderRadius: 12,
+          border: '1px solid rgba(148,163,184,0.08)',
+          background: 'rgba(17, 20, 33, 0.5)',
+          padding: 12,
+          fontSize: 12,
+          color: 'rgba(148,163,184,0.4)',
+          lineHeight: 1.5,
+        }}>
+          Use the panel on the right to chat with Obsidez using your API key.
         </div>
       </div>
     </nav>
   )
 }
-

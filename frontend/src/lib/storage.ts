@@ -27,3 +27,8 @@ export function clearApiKey() {
   if (typeof window !== 'undefined') localStorage.removeItem(API_KEY)
 }
 
+export function clearAll() {
+  clearToken()
+  clearApiKey()
+}
+

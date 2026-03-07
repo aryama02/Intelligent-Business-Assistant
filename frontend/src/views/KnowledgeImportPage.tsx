@@ -73,7 +73,7 @@ export function KnowledgeImportPage() {
             </div>
 
             {error ? (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
                 {error}
               </div>
             ) : null}
@@ -83,22 +83,22 @@ export function KnowledgeImportPage() {
         <Card>
           <CardTitle>Output preview</CardTitle>
           {!result ? (
-            <div className="text-sm text-slate-600">
-              Run generation to see a preview. Created items will appear under <span className="font-medium">Chat Configs</span>.
+            <div className="text-sm text-slate-400">
+              Run generation to see a preview. Created items will appear under <span className="font-medium text-slate-300">Chat Configs</span>.
             </div>
           ) : result.success ? (
             <div className="space-y-3">
-              <div className="text-sm text-slate-700">
-                Created <span className="font-semibold text-slate-900">{result.created_count}</span> Q&A pairs for{' '}
-                <span className="font-semibold text-slate-900">{result.company_name}</span>.
+              <div className="text-sm text-slate-400">
+                Created <span className="font-semibold text-slate-200">{result.created_count}</span> Q&A pairs for{' '}
+                <span className="font-semibold text-slate-200">{result.company_name}</span>.
               </div>
               <div className="space-y-2">
                 {(result.preview || []).map((p: any, idx: number) => (
-                  <div key={idx} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div key={idx} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Q</div>
-                    <div className="mt-1 text-sm font-medium text-slate-900">{p.question}</div>
+                    <div className="mt-1 text-sm font-medium text-slate-200">{p.question}</div>
                     <div className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">A</div>
-                    <div className="mt-1 text-sm text-slate-700">{p.answer}</div>
+                    <div className="mt-1 text-sm text-slate-400">{p.answer}</div>
                   </div>
                 ))}
               </div>
@@ -107,11 +107,11 @@ export function KnowledgeImportPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-2 text-sm text-slate-700">
-              <div className="font-medium text-slate-900">Generation failed</div>
-              {result.error ? <div className="text-rose-700">{result.error}</div> : null}
+            <div className="space-y-2 text-sm text-slate-400">
+              <div className="font-medium text-slate-200">Generation failed</div>
+              {result.error ? <div className="text-rose-400">{result.error}</div> : null}
               {result.raw_preview ? (
-                <pre className="max-h-64 overflow-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700">
+                <pre className="max-h-64 overflow-auto rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-400">
                   {result.raw_preview}
                 </pre>
               ) : null}

@@ -64,8 +64,8 @@ export function ChatConfigsPage() {
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-sm font-semibold text-slate-900">Chat configs (knowledge base)</div>
-          <div className="mt-1 text-sm text-slate-600">
+          <div className="text-sm font-semibold text-slate-200">Chat configs (knowledge base)</div>
+          <div className="mt-1 text-sm text-slate-400">
             Create/update Q&A. Your backend invalidates Redis for this company, so the next request re-caches the fresh configs.
           </div>
         </div>
@@ -77,7 +77,7 @@ export function ChatConfigsPage() {
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
           {error}
         </div>
       ) : null}
@@ -92,7 +92,7 @@ export function ChatConfigsPage() {
               <Button onClick={onCreate} disabled={!canCreate}>
                 Add
               </Button>
-              <div className="text-xs text-slate-500">Requires login (Bearer token).</div>
+              <div className="text-xs text-slate-500">Requires auth (Bearer token).</div>
             </div>
           </div>
         </Card>
@@ -100,7 +100,7 @@ export function ChatConfigsPage() {
         <Card>
           <CardTitle right={<Badge tone="neutral">{items.length} items</Badge>}>Existing configs</CardTitle>
           {items.length === 0 ? (
-            <div className="text-sm text-slate-600">
+            <div className="text-sm text-slate-400">
               No chat configs yet. Add one on the left.
             </div>
           ) : (
@@ -137,10 +137,10 @@ function ChatConfigRow(props: {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <div className="text-xs font-medium text-slate-600">
-          ID: <span className="font-mono text-slate-700">{item._id}</span>
+        <div className="text-xs font-medium text-slate-400">
+          ID: <span className="font-mono text-slate-300">{item._id}</span>
         </div>
         <Button variant="secondary" size="sm" onClick={save} disabled={!dirty || saving}>
           {saving ? 'Saving…' : 'Save'}
@@ -153,7 +153,7 @@ function ChatConfigRow(props: {
       </div>
 
       <div className="mt-2 text-xs text-slate-500">
-        Saving triggers Mongo update + Redis invalidation, so the next <span className="font-mono">GET /get-chat-config</span> re-caches.
+        Saving triggers Mongo update + Redis invalidation, so the next <span className="font-mono text-slate-400">GET /get-chat-config</span> re-caches.
       </div>
     </div>
   )

@@ -12,12 +12,12 @@ export function Textarea(
   return (
     <label className="block">
       {label ? (
-        <div className="mb-1 text-xs font-medium text-slate-700">{label}</div>
+        <div className="mb-1 text-xs font-medium text-slate-400">{label}</div>
       ) : null}
       <textarea
         id={textareaId}
         className={clsx(
-          'min-h-[96px] w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-900/5',
+          'min-h-[96px] w-full resize-y rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10',
           className,
         )}
         {...rest}
@@ -26,4 +26,3 @@ export function Textarea(
     </label>
   )
 }
-

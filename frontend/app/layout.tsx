@@ -3,8 +3,8 @@ import '../src/index.css'
 import ClientLayoutWrapper from './ClientLayoutWrapper'
 
 export const metadata: Metadata = {
-    title: 'RAMO',
-    description: 'AI Assistant',
+    title: 'Obsidez',
+    description: 'Obsidez AI Assistant',
 }
 
 export default function RootLayout({
@@ -22,11 +22,11 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
+                    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap"
                     rel="stylesheet"
                 />
             </head>
-            <body className="h-full bg-slate-50 text-slate-900 antialiased">
+            <body className="h-full bg-[#020617] text-slate-100 antialiased">
                 <ClientLayoutWrapper>
                     {children}
                 </ClientLayoutWrapper>

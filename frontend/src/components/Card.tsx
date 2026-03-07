@@ -7,7 +7,7 @@ export function Card(props: { className?: string; children: React.ReactNode }) {
 export function CardTitle(props: { children: React.ReactNode; right?: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-start justify-between gap-4">
-      <div className="text-sm font-semibold tracking-tight text-slate-900">{props.children}</div>
+      <div className="text-sm font-semibold tracking-tight text-slate-200">{props.children}</div>
       {props.right ? <div className="shrink-0">{props.right}</div> : null}
     </div>
   )

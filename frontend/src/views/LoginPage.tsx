@@ -1,21 +1,44 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Button } from '../components/Button'
-import { Input } from '../components/Input'
-import { Card, CardTitle } from '../components/Card'
-import { createApiKey, fetchProfile, login, logout, registerUser, subscribeUser } from '../state/auth'
-import { ApiError } from '../lib/api'
+import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAppContext } from '../context/AppContext'
+import { registerUser } from '../state/auth'
+import { ApiError } from '../lib/api'
+
+type TabMode = 'login' | 'signup'
+
+/* Simple bird SVG icon */
+function BirdIcon({ size = 24 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7" />
+      <path d="M12 3c1 2 4 4 7 4-1 3-4 6-7 7-3-1-6-4-7-7 3 0 6-2 7-4z" />
+      <path d="M12 14v4" />
+      <path d="M9 18h6" />
+      <circle cx="10.5" cy="7.5" r="0.5" fill="currentColor" stroke="none" />
+      <circle cx="13.5" cy="7.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
 
 export function LoginPage() {
-  const { setApiKey } = useAppContext()
+  const { loginUser, isAuthenticated, logoutUser, user } = useAppContext()
+  const router = useRouter()
+  const [tab, setTab] = useState<TabMode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [company, setCompany] = useState('')
   const [founded, setFounded] = useState('')
   const [location, setLocation] = useState('')
   const [loading, setLoading] = useState(false)
-  const [profileLoading, setProfileLoading] = useState(false)
-  const [profile, setProfile] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [info, setInfo] = useState<string | null>(null)
 
@@ -25,42 +48,65 @@ export function LoginPage() {
     [company, founded, location, email, password],
   )
 
-  async function refreshProfile() {
-    setProfileLoading(true)
-    setError(null)
-    setInfo(null)
-    try {
-      const p = await fetchProfile()
-      setProfile(p)
+  if (isAuthenticated) {
+    return (
+      <div className="login-page">
+        <div className="login-bg-glow" />
+        <div className="login-grid" />
 
-      if (p && 'api_key' in p && typeof p.api_key === 'string' && p.api_key !== 'Not set') {
-        setApiKey(p.api_key)
-      }
-    } catch (e) {
-      const msg = e instanceof ApiError ? e.message : 'Failed to load profile'
-      setError(msg)
-      setProfile(null)
-    } finally {
-      setProfileLoading(false)
-    }
+        <div className="login-card">
+          <div className="login-logo-wrap">
+            <div className="login-logo-icon">
+              <BirdIcon size={22} />
+            </div>
+            <div className="login-logo-text">Obsidez</div>
+            <div className="login-logo-sub">Intelligent AI Assistant</div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="login-alert login-alert-success">
+              <div style={{ fontSize: 14 }}>
+                You&apos;re already signed in as{' '}
+                <span style={{ fontWeight: 600 }}>{user?.email}</span>.
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                className="login-btn"
+                style={{ flex: 1 }}
+                onClick={() => router.push('/')}
+              >
+                Back to dashboard
+              </button>
+              <button
+                className="login-btn"
+                style={{
+                  flex: 1,
+                  background: 'rgba(148,163,184,0.1)',
+                  boxShadow: 'none',
+                }}
+                onClick={logoutUser}
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
-
-  useEffect(() => {
-    void refreshProfile()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   async function onLogin() {
     setLoading(true)
     setError(null)
     setInfo(null)
     try {
-      const res = await login(email.trim(), password)
-      if (!('unique_token' in res)) {
-        setError(res.message || 'Login failed')
-      } else {
-        await refreshProfile()
+      const result = await loginUser(email.trim(), password)
+      if (!result.success) {
+        setError(result.error || 'Login failed')
       }
+      // On success, AppContext sets isAuthenticated → AuthGuard will render app
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : 'Login failed'
       setError(msg)
@@ -69,209 +115,127 @@ export function LoginPage() {
     }
   }
 
-  function onLogout() {
-    logout()
-    setProfile(null)
-    setEmail('')
-    setPassword('')
-    setCompany('')
-    setFounded('')
-    setLocation('')
+  async function onRegister() {
+    setLoading(true)
     setError(null)
     setInfo(null)
+    try {
+      const res = await registerUser({
+        company_name: company.trim(),
+        founded: founded.trim(),
+        location: location.trim(),
+        email: email.trim(),
+        password,
+      })
+      setInfo(res.message || 'Account created — you can now log in.')
+      setTab('login')
+    } catch (e) {
+      const msg = e instanceof ApiError ? e.message : 'Registration failed'
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const user = profile && 'user' in profile ? profile.user : null
-
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <div className="text-sm font-semibold text-slate-900">Account & API key</div>
-        <div className="mt-1 text-sm text-slate-600">
-          Create an account, activate your free subscription, then generate an API key that is auto-plugged into the chatbot on the right.
-        </div>
+    <div className="login-page">
+      <div className="login-bg-glow" />
+      <div className="login-grid" />
+
+      {/* Floating particles */}
+      <div className="login-particles">
+        <div className="login-particle" style={{ left: '10%', animationDelay: '0s' }} />
+        <div className="login-particle" style={{ left: '30%', animationDelay: '2s' }} />
+        <div className="login-particle" style={{ left: '50%', animationDelay: '4s' }} />
+        <div className="login-particle" style={{ left: '70%', animationDelay: '1s' }} />
+        <div className="login-particle" style={{ left: '90%', animationDelay: '3s' }} />
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Card>
-          <CardTitle>Sign up or log in</CardTitle>
-          <div className="space-y-3">
-            <Input
-              label="Company name"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="Acme Inc."
-              autoComplete="organization"
-            />
-            <Input
-              label="Founded"
-              value={founded}
-              onChange={(e) => setFounded(e.target.value)}
-              placeholder="2024"
-            />
-            <Input
-              label="Location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="San Francisco, CA"
-            />
-            <Input
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              autoComplete="email"
-            />
-            <Input
-              label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              type="password"
-              autoComplete="current-password"
-            />
-
-            {error ? (
-              <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-                {error}
-              </div>
-            ) : null}
-            {info ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                {info}
-              </div>
-            ) : null}
-
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              <Button onClick={onLogin} disabled={!canSubmit || loading}>
-                {loading ? 'Signing in…' : 'Log in'}
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={async () => {
-                  setError(null)
-                  setInfo(null)
-                  try {
-                    const res = await registerUser({
-                      company_name: company.trim(),
-                      founded: founded.trim(),
-                      location: location.trim(),
-                      email: email.trim(),
-                      password,
-                    })
-                    setInfo(res.message || 'Registered')
-                  } catch (e) {
-                    const msg = e instanceof ApiError ? e.message : 'Registration failed'
-                    setError(msg)
-                  }
-                }}
-                disabled={!canRegister}
-              >
-                Sign up (free)
-              </Button>
-              <Button variant="ghost" onClick={refreshProfile} disabled={profileLoading}>
-                {profileLoading ? 'Refreshing…' : 'Check session'}
-              </Button>
-            </div>
+      <div className="login-card">
+        {/* Logo */}
+        <div className="login-logo-wrap">
+          <div className="login-logo-icon">
+            <BirdIcon size={22} />
           </div>
-        </Card>
+          <div className="login-logo-text">Obsidez</div>
+          <div className="login-logo-sub">Intelligent AI Assistant</div>
+        </div>
 
-        <Card>
-          <CardTitle
-            right={
-              user ? (
-                <Button variant="danger" size="sm" onClick={onLogout}>
-                  Log out
-                </Button>
-              ) : null
-            }
+        {/* Tabs */}
+        <div className="login-tabs">
+          <button
+            className={`login-tab ${tab === 'login' ? 'active' : ''}`}
+            onClick={() => { setTab('login'); setError(null); setInfo(null) }}
           >
-            Session & free plan
-          </CardTitle>
+            Log in
+          </button>
+          <button
+            className={`login-tab ${tab === 'signup' ? 'active' : ''}`}
+            onClick={() => { setTab('signup'); setError(null); setInfo(null) }}
+          >
+            Sign up
+          </button>
+        </div>
 
-          {user ? (
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <div className="text-slate-600">Company</div>
-                <div className="font-medium text-slate-900">{user.company_name}</div>
+        {/* Form */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {tab === 'signup' && (
+            <>
+              <div>
+                <label className="login-field-label">Company name</label>
+                <input className="login-input" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Acme Inc." autoComplete="organization" />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="text-slate-600">Email</div>
-                <div className="font-medium text-slate-900">{user.email}</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-slate-600">Location</div>
-                <div className="font-medium text-slate-900">{user.location}</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-slate-600">Founded</div>
-                <div className="font-medium text-slate-900">{user.founded}</div>
-              </div>
-
-              <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
-                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                  Free plan
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div>
+                  <label className="login-field-label">Founded</label>
+                  <input className="login-input" value={founded} onChange={(e) => setFounded(e.target.value)} placeholder="2024" />
                 </div>
-                <div className="mb-2 text-slate-700">
-                  One simple plan: launch your chatbot with a single API key. No credit card required.
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={async () => {
-                      setError(null)
-                      setInfo(null)
-                      try {
-                        const res = await subscribeUser()
-                        setInfo(res.message || 'Subscription updated')
-                        await refreshProfile()
-                      } catch (e) {
-                        const msg = e instanceof ApiError ? e.message : 'Subscription failed'
-                        setError(msg)
-                      }
-                    }}
-                  >
-                    Activate free plan
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={async () => {
-                      setError(null)
-                      setInfo(null)
-                      try {
-                        const res = await createApiKey()
-                        if (res.api_key) {
-                          setApiKey(res.api_key)
-                          setInfo('API key generated and plugged into the chatbot.')
-                        } else {
-                          setInfo(res.message || 'API key request sent')
-                        }
-                        await refreshProfile()
-                      } catch (e) {
-                        const msg = e instanceof ApiError ? e.message : 'API key generation failed'
-                        setError(msg)
-                      }
-                    }}
-                  >
-                    Generate API key
-                  </Button>
+                <div>
+                  <label className="login-field-label">Location</label>
+                  <input className="login-input" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="San Francisco, CA" />
                 </div>
               </div>
-
-              <div className="pt-1 text-xs text-slate-500">
-                Your token is sent as <span className="font-mono">Authorization: Bearer &lt;token&gt;</span> on protected routes.
-              </div>
-            </div>
-          ) : (
-            <div className="text-sm text-slate-600">
-              Not logged in yet. Create an account on the left, then activate the free plan and generate your API key.
-            </div>
+            </>
           )}
-        </Card>
+
+          <div>
+            <label className="login-field-label">Email</label>
+            <input className="login-input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" type="email" />
+          </div>
+
+          <div>
+            <label className="login-field-label">Password</label>
+            <input className="login-input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" type="password" autoComplete={tab === 'login' ? 'current-password' : 'new-password'} />
+          </div>
+
+          {error && <div className="login-alert login-alert-error">{error}</div>}
+          {info && <div className="login-alert login-alert-success">{info}</div>}
+
+          {tab === 'login' ? (
+            <button className="login-btn" onClick={onLogin} disabled={!canSubmit || loading}>
+              {loading ? 'Signing in…' : 'Continue'}
+            </button>
+          ) : (
+            <button className="login-btn" onClick={onRegister} disabled={!canRegister || loading}>
+              {loading ? 'Creating account…' : 'Create account'}
+            </button>
+          )}
+
+          <div style={{ textAlign: 'center', paddingTop: 2 }}>
+            {tab === 'login' ? (
+              <span style={{ fontSize: 13, color: 'rgba(148,163,184,0.35)' }}>
+                No account?{' '}
+                <button className="login-link" onClick={() => { setTab('signup'); setError(null); setInfo(null) }}>Sign up</button>
+              </span>
+            ) : (
+              <span style={{ fontSize: 13, color: 'rgba(148,163,184,0.35)' }}>
+                Already registered?{' '}
+                <button className="login-link" onClick={() => { setTab('login'); setError(null); setInfo(null) }}>Log in</button>
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
 }
-

@@ -6,13 +6,12 @@ export function Badge(props: { children: React.ReactNode; tone?: 'neutral' | 'su
     <span
       className={clsx(
         'inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium',
-        tone === 'neutral' && 'border-slate-200 bg-slate-50 text-slate-700',
-        tone === 'success' && 'border-emerald-200 bg-emerald-50 text-emerald-700',
-        tone === 'warning' && 'border-amber-200 bg-amber-50 text-amber-700',
+        tone === 'neutral' && 'border-white/10 bg-white/5 text-slate-400',
+        tone === 'success' && 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+        tone === 'warning' && 'border-amber-500/20 bg-amber-500/10 text-amber-400',
       )}
     >
       {children}
     </span>
   )
 }
-
