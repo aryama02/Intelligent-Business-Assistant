@@ -633,7 +633,7 @@
 }
 
 .dark-sidebar-link.active {
-  background: linear-gradient(135deg, #10bcc9, #1975ff);
+  background: linear-gradient(135deg, #10bcc9, #2977eb);
   color: #f9fafb;
   border: 1px solid rgba(129, 140, 248, 0.9);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
