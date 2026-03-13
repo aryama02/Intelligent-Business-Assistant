@@ -1,0 +1,62 @@
+﻿
+> frontend@0.0.0 build
+> next build
+
+node.exe : ΓÜá 
+Warning: Next.js 
+inferred your 
+workspace root, but it 
+may not be correct.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (ΓÜá Warning:    
+ Ne...not be correc    
+t.:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+ We detected multiple 
+lockfiles and selected 
+the directory of D:\Pro
+jects\Ai_chatbot\packag
+e-lock.json as the 
+root directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, 
+or consider removing 
+one of the lockfiles 
+if it's not needed.
+   See https://nextjs.o
+rg/docs/app/api-referen
+ce/config/next-config-j
+s/turbopack#root-direct
+ory for more 
+information.
+ Detected additional 
+lockfiles: 
+   * D:\Projects\Ai_cha
+tbot\frontend\package-l
+ock.json
+
+
+> Build error occurred
+Error: > `pages` and 
+`app` directories 
+should be under the 
+same folder
+    at ignore-listed 
+frames
