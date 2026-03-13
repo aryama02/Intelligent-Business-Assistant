@@ -634,6 +634,6 @@
 
 .dark-sidebar-link.active {
   background: linear-gradient(135deg, #10bcc9, #2977eb);
-  color: #f9fafb; 
+  color: #ffffff; 
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
 }
