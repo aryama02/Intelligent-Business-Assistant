@@ -38,7 +38,7 @@ export function KnowledgeImportPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <div className="text-sm font-semibold text-slate-900">AI knowledge import</div>
+        <div className="text-sm font-semibold text-slate-100">AI knowledge import</div>
         <div className="mt-1 text-sm text-slate-600">
           Paste a large blob of company policies/info. The AI will generate Q&A pairs and save them into your company’s Chat Configs automatically.
         </div>

@@ -18,16 +18,9 @@ export function SidebarNav() {
   const initials = user?.email ? user.email.slice(0, 2).toUpperCase() : '??'
 
   return (
-    <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <nav className="flex flex-col gap-1">
       {user && (
-        <div
-          style={{
-            padding: '0 12px 10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
+        <div className="px-3 pb-2.5 flex items-center gap-2.5">
           <button
             type="button"
             className="profile-avatar-btn"
@@ -36,24 +29,11 @@ export function SidebarNav() {
           >
             {initials}
           </button>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: 12,
-                color: '#e2e8f0',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
+          <div className="flex-1 min-w-0">
+            <div className="text-xs text-slate-100 whitespace-nowrap overflow-hidden text-ellipsis">
               {user.email}
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: 'rgba(148,163,184,0.6)',
-              }}
-            >
+            <div className="text-xs text-slate-500">
               Click avatar to log out
             </div>
           </div>
@@ -67,37 +47,18 @@ export function SidebarNav() {
             href={l.to}
             className={`dark-sidebar-link ${isActive ? 'active' : ''}`}
           >
-            <l.icon style={{ width: 16, height: 16 }} />
+            <l.icon className="w-4 h-4" />
             {l.label}
           </Link>
         );
       })}
 
-      <div style={{ paddingTop: 20 }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '0 12px',
-          fontSize: 11,
-          fontWeight: 600,
-          textTransform: 'uppercase' as const,
-          letterSpacing: '0.08em',
-          color: 'rgba(148,163,184,0.35)',
-          marginBottom: 8,
-        }}>
-          <MessageSquareText style={{ width: 16, height: 16 }} />
+      <div className="pt-5">
+        <div className="flex items-center gap-2 px-3 text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+          <MessageSquareText className="w-4 h-4" />
           Obsidez Chat
         </div>
-        <div style={{
-          borderRadius: 12,
-          border: '1px solid rgba(148,163,184,0.08)',
-          background: 'rgba(17, 20, 33, 0.5)',
-          padding: 12,
-          fontSize: 12,
-          color: 'rgba(148,163,184,0.4)',
-          lineHeight: 1.5,
-        }}>
+        <div className="rounded-xl border border-slate-700/10 bg-slate-900/50 p-3 text-xs text-slate-400 leading-relaxed">
           Use the panel on the right to chat with Obsidez using your API key.
         </div>
       </div>

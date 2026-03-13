@@ -24,10 +24,10 @@ export function DashboardPage() {
   const statusText = health === 'ok' ? 'Connected' : health === 'down' ? 'Offline' : 'Checking…'
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="mb-8">
+        <div className="flex items-center gap-3">
           <span style={{
             fontFamily: "'Orbitron', sans-serif",
             fontSize: 18,
@@ -39,19 +39,19 @@ export function DashboardPage() {
           }}>
             Obsidez
           </span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>Dashboard</span>
+          <span className="text-sm font-semibold text-slate-100">Dashboard</span>
         </div>
-        <div style={{ marginTop: 4, fontSize: 14, color: 'rgba(148,163,184,0.5)' }}>
+        <div className="mt-1 text-sm text-slate-400">
           Connect your data, get an API key, and start chatting with Obsidez.
         </div>
       </div>
 
       {/* Cards Grid */}
-      <div style={{ display: 'grid', gap: 20, gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))' }}>
+      <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))' }}>
         {/* Backend Connection */}
         <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#e2e8f0' }}>Backend connection</span>
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-base font-semibold text-slate-100">Backend connection</span>
             <span style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -68,36 +68,17 @@ export function DashboardPage() {
               {statusText}
             </span>
           </div>
-          <div style={{ fontSize: 13, color: 'rgba(148,163,184,0.5)', marginBottom: 12 }}>
-            This checks <span style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(148,163,184,0.6)' }}>GET /</span> through the dev proxy.
+          <div className="text-sm text-slate-400 mb-3">
+            This checks <span className="font-mono text-xs text-slate-400">GET /</span> through the dev proxy.
           </div>
           {error && (
-            <div style={{
-              borderRadius: 12,
-              border: '1px solid rgba(251, 191, 36, 0.15)',
-              background: 'rgba(251, 191, 36, 0.06)',
-              padding: '8px 14px',
-              color: '#fbbf24',
-              fontSize: 13,
-              marginBottom: 12,
-            }}>
+            <div className="rounded-xl border border-amber-500/15 bg-amber-500/10 px-3.5 py-2 text-amber-300 text-sm mb-3">
               {error}
             </div>
           )}
           <button
             onClick={ping}
-            style={{
-              padding: '8px 18px',
-              borderRadius: 10,
-              border: '1px solid rgba(148,163,184,0.1)',
-              background: 'rgba(148,163,184,0.06)',
-              color: 'rgba(148,163,184,0.7)',
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-              fontFamily: "'Inter', sans-serif",
-            }}
+            className="px-4.5 py-2 rounded-lg border border-slate-600/10 bg-slate-600/10 text-slate-400 text-sm font-medium cursor-pointer transition-all duration-150 hover:bg-slate-600/20 hover:text-slate-200"
           >
             Re-check connection
           </button>
@@ -105,20 +86,20 @@ export function DashboardPage() {
 
         {/* Free Plan */}
         <div className="card">
-          <div style={{ marginBottom: 16 }}>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#e2e8f0' }}>Free plan</span>
+          <div className="mb-4">
+            <span className="text-base font-semibold text-slate-100">Free plan</span>
           </div>
-          <div style={{ fontSize: 28, fontWeight: 600, color: '#e2e8f0', marginBottom: 16 }}>
-            $0 <span style={{ fontSize: 14, fontWeight: 400, color: 'rgba(148,163,184,0.5)' }}>/ month</span>
+          <div className="text-3xl font-semibold text-slate-100 mb-4">
+            $0 <span className="text-sm font-normal text-slate-400">/&nbsp;month</span>
           </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+          <ul className="list-none p-0 m-0 flex flex-col gap-2 mb-5">
             {[
               '1 company workspace',
               'Chatbot API key',
               'Smart search over your configs',
               'MongoDB + Redis caching',
             ].map((item) => (
-              <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'rgba(148,163,184,0.55)' }}>
+              <li key={item} className="flex items-center gap-2 text-sm text-slate-400">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>

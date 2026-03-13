@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppContext } from '../context/AppContext'
 import { registerUser } from '../state/auth'
@@ -48,54 +48,12 @@ export function LoginPage() {
     [company, founded, location, email, password],
   )
 
-  if (isAuthenticated) {
-    return (
-      <div className="login-page">
-        <div className="login-bg-glow" />
-        <div className="login-grid" />
-
-        <div className="login-card">
-          <div className="login-logo-wrap">
-            <div className="login-logo-icon">
-              <BirdIcon size={22} />
-            </div>
-            <div className="login-logo-text">Obsidez</div>
-            <div className="login-logo-sub">Intelligent AI Assistant</div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="login-alert login-alert-success">
-              <div style={{ fontSize: 14 }}>
-                You&apos;re already signed in as{' '}
-                <span style={{ fontWeight: 600 }}>{user?.email}</span>.
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                className="login-btn"
-                style={{ flex: 1 }}
-                onClick={() => router.push('/')}
-              >
-                Back to dashboard
-              </button>
-              <button
-                className="login-btn"
-                style={{
-                  flex: 1,
-                  background: 'rgba(148,163,184,0.1)',
-                  boxShadow: 'none',
-                }}
-                onClick={logoutUser}
-              >
-                Log out
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Auto-redirect to dashboard after successful login
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/')
+    }
+  }, [isAuthenticated, router])
 
   async function onLogin() {
     setLoading(true)
@@ -106,7 +64,7 @@ export function LoginPage() {
       if (!result.success) {
         setError(result.error || 'Login failed')
       }
-      // On success, AppContext sets isAuthenticated → AuthGuard will render app
+      // On success, useEffect will handle the redirect to dashboard
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : 'Login failed'
       setError(msg)
@@ -178,14 +136,14 @@ export function LoginPage() {
         </div>
 
         {/* Form */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           {tab === 'signup' && (
             <>
               <div>
                 <label className="login-field-label">Company name</label>
                 <input className="login-input" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Acme Inc." autoComplete="organization" />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div className="grid grid-cols-2 gap-2.5">
                 <div>
                   <label className="login-field-label">Founded</label>
                   <input className="login-input" value={founded} onChange={(e) => setFounded(e.target.value)} placeholder="2024" />
@@ -221,14 +179,14 @@ export function LoginPage() {
             </button>
           )}
 
-          <div style={{ textAlign: 'center', paddingTop: 2 }}>
+          <div className="text-center pt-0.5">
             {tab === 'login' ? (
-              <span style={{ fontSize: 13, color: 'rgba(148,163,184,0.35)' }}>
+              <span className="text-xs text-slate-400">
                 No account?{' '}
                 <button className="login-link" onClick={() => { setTab('signup'); setError(null); setInfo(null) }}>Sign up</button>
               </span>
             ) : (
-              <span style={{ fontSize: 13, color: 'rgba(148,163,184,0.35)' }}>
+              <span className="text-xs text-slate-400">
                 Already registered?{' '}
                 <button className="login-link" onClick={() => { setTab('login'); setError(null); setInfo(null) }}>Log in</button>
               </span>
