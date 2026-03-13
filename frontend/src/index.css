@@ -628,13 +628,12 @@
 
 .dark-sidebar-link:hover {
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(56, 189, 248, 0.14));
-  color: #f9fafb;
+  color: #f9fafb; 
   transform: translateX(2px);
 }
 
 .dark-sidebar-link.active {
   background: linear-gradient(135deg, #10bcc9, #2977eb);
-  color: #f9fafb;
-  border: 1px solid rgba(129, 140, 248, 0.9);
+  color: #f9fafb; 
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
 }
